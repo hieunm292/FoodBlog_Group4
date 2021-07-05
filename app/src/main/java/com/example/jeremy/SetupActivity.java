@@ -19,9 +19,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
@@ -29,6 +32,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -38,7 +45,8 @@ public class SetupActivity extends AppCompatActivity {
     private EditText setupName;
     private Button setupBtn;
     private ProgressBar setupProgress;
-    //firebase magic
+    private boolean imageIsChanged = false;
+    //firebase
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseStorage firebaseStorage;
@@ -68,32 +76,69 @@ public class SetupActivity extends AppCompatActivity {
 
         user_id = firebaseAuth.getCurrentUser().getUid();
 
+        setupProgress.setVisibility(View.VISIBLE);
+        setupBtn.setEnabled(false);
 
-        // onClick SAVE ACCOUNT SETTINGS
+        //get data only one, not real-time or multiple time
+        firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    if (task.getResult().exists()) {
+
+                        String name  = task.getResult().getString("name");
+                        String image = task.getResult().getString("image");
+
+                    //    mainImageURI = Uri.parse(image);
+
+                        setupName.setText(name);
+
+                        //0nichann loading waiting request
+                        RequestOptions placeholderXX = new RequestOptions();
+                        placeholderXX.placeholder(R.drawable.naruto);
+
+                        Glide.with(SetupActivity.this).setDefaultRequestOptions(placeholderXX).load(image).into(setupImage);
+                    }
+                }else{
+                    String errorMessage = task.getException().getMessage();
+                    Toast.makeText(SetupActivity.this, "Google Cloud Retrieve Error "+errorMessage, Toast.LENGTH_LONG).show();
+                }
+                setupProgress.setVisibility(View.INVISIBLE);
+                setupBtn.setEnabled(true);
+            }
+        });
+
+
+            // onClick SAVE ACCOUNT SETTINGS
         setupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user_name = setupName.getText().toString();
-                if (!TextUtils.isEmpty(user_name) && mainImageURI != null) {
-                    setupProgress.setVisibility(View.VISIBLE);
-                    // add image to firebase storege and user_name to file storage
-                    user_id = firebaseAuth.getCurrentUser().getUid();
-                    //root firebase storage with profile_images folder will have image name with user with format .jpg
-                    StorageReference image_path = storageReference.child("profile_images").child(user_id + ".jpg");
-                    image_path.putFile(mainImageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                Task<Uri> download_uri = task.getResult().getMetadata().getReference().getDownloadUrl();
-                                Toast.makeText(SetupActivity.this, "Image is uploaded " , Toast.LENGTH_LONG).show();
-                            } else {
-                                String errorMessage = task.getException().getMessage();
-                                Toast.makeText(SetupActivity.this, "Image Error " + errorMessage, Toast.LENGTH_LONG).show();
-                                setupProgress.setVisibility(View.INVISIBLE);
+                final String user_name = setupName.getText().toString();
+                setupProgress.setVisibility(View.VISIBLE);
+            //    if(imageIsChanged) {
+
+                    if (!TextUtils.isEmpty(user_name) && mainImageURI != null) {
+                        // add image to firebase storege and user_name to file storage
+                        user_id = firebaseAuth.getCurrentUser().getUid();
+                        //root firebase storage with profile_images folder will have image name with user with format .jpg
+                        StorageReference image_path = storageReference.child("profile_images").child(user_id + ".jpg");
+                        image_path.putFile(mainImageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    storeFirestore(task, user_name);
+
+                                } else {
+                                    String errorMessage = task.getException().getMessage();
+                                    Toast.makeText(SetupActivity.this, "Image Error " + errorMessage, Toast.LENGTH_LONG).show();
+                                    setupProgress.setVisibility(View.INVISIBLE);
+                                }
                             }
-                        }
-                    });
-                }
+                        });
+                    }
+//                }else{
+//                    storeFirestore(null, user_name);
+//                }
             }
         });
 
@@ -115,6 +160,30 @@ public class SetupActivity extends AppCompatActivity {
         });
     }
 
+    private void storeFirestore(@NonNull Task<UploadTask.TaskSnapshot> task,String user_name) {
+        Task<Uri> download_uri = task.getResult().getMetadata().getReference().getDownloadUrl();
+        Map<String, String> userMap=new HashMap<>();
+
+        userMap.put("name", user_name);
+        userMap.put("image",download_uri.toString());
+
+        firebaseFirestore.collection("Users").document(user_id).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(SetupActivity.this, "The User Setting is updated ! ", Toast.LENGTH_LONG).show();
+                    Intent mainIntent=new Intent(SetupActivity.this, MainActivity.class);
+                    startActivity(mainIntent);
+                    finish(); //user cant go back
+                }else{
+                    String errorMessage=task.getException().getMessage();
+                    Toast.makeText(SetupActivity.this, "Google Cloud Error "+errorMessage, Toast.LENGTH_LONG).show();
+                }
+                setupProgress.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
     private void BringImagePicker() {
         CropImage.activity()
             .setGuidelines(CropImageView.Guidelines.ON)
@@ -132,6 +201,9 @@ public class SetupActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 mainImageURI = result.getUri();
                 setupImage.setImageURI(mainImageURI);
+
+            //    imageIsChanged = true;
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }

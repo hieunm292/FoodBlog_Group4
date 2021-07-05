@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
@@ -55,10 +54,10 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.action_logout_btn:
                 logOut();
-                return  true;
+                return true;
             case R.id.action_settings_btn:
                 sendToAccountSetting();
-                return  true;
+                return true;
             default: return false;
         }
     }
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private void sendToAccountSetting() {
         Intent i = new Intent(MainActivity.this, SetupActivity.class);
         startActivity(i);
-        finish();
+       // finish();
     }
 
     private void logOut() {
