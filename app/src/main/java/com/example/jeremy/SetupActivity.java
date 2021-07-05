@@ -85,12 +85,9 @@ public class SetupActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()) {
                     if (task.getResult().exists()) {
-
                         String name  = task.getResult().getString("name");
                         String image = task.getResult().getString("image");
-
                     //    mainImageURI = Uri.parse(image);
-
                         setupName.setText(name);
 
                         //0nichann loading waiting request
@@ -107,17 +104,15 @@ public class SetupActivity extends AppCompatActivity {
                 setupBtn.setEnabled(true);
             }
         });
-
-
             // onClick SAVE ACCOUNT SETTINGS
         setupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String user_name = setupName.getText().toString();
-                setupProgress.setVisibility(View.VISIBLE);
-            //    if(imageIsChanged) {
+                if (!TextUtils.isEmpty(user_name) && mainImageURI != null) {
+                    setupProgress.setVisibility(View.VISIBLE);
+                //    if(imageIsChanged) {
 
-                    if (!TextUtils.isEmpty(user_name) && mainImageURI != null) {
                         // add image to firebase storege and user_name to file storage
                         user_id = firebaseAuth.getCurrentUser().getUid();
                         //root firebase storage with profile_images folder will have image name with user with format .jpg
@@ -127,7 +122,6 @@ public class SetupActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                                 if (task.isSuccessful()) {
                                     storeFirestore(task, user_name);
-
                                 } else {
                                     String errorMessage = task.getException().getMessage();
                                     Toast.makeText(SetupActivity.this, "Image Error " + errorMessage, Toast.LENGTH_LONG).show();
@@ -135,10 +129,10 @@ public class SetupActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                    }
-//                }else{
-//                    storeFirestore(null, user_name);
-//                }
+//                    }else{
+//                        storeFirestore(null, user_name);
+//                    }
+                }
             }
         });
 

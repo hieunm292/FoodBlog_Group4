@@ -11,7 +11,7 @@
         android:id="@+id/setupToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#2196f3"
+        android:background="#fff"
         app:titleTextColor="#ffffff"
         tools:ignore="MissingConstraints" />
 
