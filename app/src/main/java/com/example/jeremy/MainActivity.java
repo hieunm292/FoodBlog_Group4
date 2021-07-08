@@ -17,11 +17,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar mainToolbar;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore firebaseFirestore;
+    private String current_user_id;
 
     private FloatingActionButton addPostBtn;
 
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         // setSupportActionBar(mainToolbar);
@@ -53,6 +58,22 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
             sendToLogin();
         } else {
+            current_user_id = mAuth.getCurrentUser().getUid();
+            firebaseFirestore.collection("Users").document(current_user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().exists()) {
+                            sendToAccountSetup();
+                            finish();
+                        }
+                    }
+                    else{
+                        String error = task.getException().getMessage();
+                        Toast.makeText(MainActivity.this, "Error"+ error, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 
@@ -69,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 logOut();
                 return true;
             case R.id.action_settings_btn:
-                sendToAccountSetting();
+                sendToAccountSetup();
                 return true;
             default: return false;
         }
@@ -81,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    private void sendToAccountSetting() {
+    private void sendToAccountSetup() {
         Intent i = new Intent(MainActivity.this, SetupActivity.class);
         startActivity(i);
        // finish();

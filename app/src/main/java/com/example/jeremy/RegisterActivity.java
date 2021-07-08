@@ -51,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String passConf = reg_pass_confirm_field.getText().toString().trim();
 
                 if(!emailVerify(email)){
-                    Toast.makeText(RegisterActivity.this, "FBI Open Up", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Email cant be empty !", Toast.LENGTH_SHORT).show();
                 }else{
                     if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)) {
                         if (pass.equals(passConf)) {

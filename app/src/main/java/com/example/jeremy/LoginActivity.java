@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
                 }else{
-                    Toast.makeText(LoginActivity.this, "Onii-chan Baka Baka, Email or Password can't be empty Onii-Channnnnnnnn", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Email or Password can't be empty", Toast.LENGTH_SHORT).show();
                     if(TextUtils.isEmpty(loginEmail)){
                         loginemailText.getError();
                     }else if(TextUtils.isEmpty(loginPass)){

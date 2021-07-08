@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/oniichan" />
+        app:srcCompat="@drawable/fbi" />
 
     <EditText
         android:id="@+id/login_email"
@@ -68,7 +68,7 @@
         android:background="#f44336"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="Login Login Onii-Chan"
+        android:text="Login Login "
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="18sp"
@@ -87,7 +87,7 @@
         android:background="@android:color/white"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="Onii-chan dont have account yet ?"
+        android:text="dont have account yet ?"
         android:textAllCaps="false"
         android:textColor="#f44336"
         android:textSize="18sp"

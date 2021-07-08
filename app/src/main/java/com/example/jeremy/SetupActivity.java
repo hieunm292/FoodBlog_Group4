@@ -90,11 +90,11 @@ public class SetupActivity extends AppCompatActivity {
                     //    mainImageURI = Uri.parse(image);
                         setupName.setText(name);
 
-                        //0nichann loading waiting request
+                        //loading waiting request
                         RequestOptions placeholderXX = new RequestOptions();
                         placeholderXX.placeholder(R.drawable.naruto);
 
-                        Glide.with(SetupActivity.this).setDefaultRequestOptions(placeholderXX).load(image).into(setupImage);
+                        Glide.with(SetupActivity.this).load(image).into(setupImage);
                     }
                 }else{
                     String errorMessage = task.getException().getMessage();
