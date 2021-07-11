@@ -90,10 +90,6 @@ public class SetupActivity extends AppCompatActivity {
                     //    mainImageURI = Uri.parse(image);
                         setupName.setText(name);
 
-                        //loading waiting request
-                        RequestOptions placeholderXX = new RequestOptions();
-                        placeholderXX.placeholder(R.drawable.naruto);
-
                         Glide.with(SetupActivity.this).load(image).into(setupImage);
                     }
                 }else{
@@ -156,6 +152,7 @@ public class SetupActivity extends AppCompatActivity {
 
     private void storeFirestore(@NonNull Task<UploadTask.TaskSnapshot> task,String user_name) {
         Task<Uri> download_uri = task.getResult().getMetadata().getReference().getDownloadUrl();
+
         Map<String, String> userMap=new HashMap<>();
 
         userMap.put("name", user_name);
