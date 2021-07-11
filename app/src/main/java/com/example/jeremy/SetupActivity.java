@@ -156,6 +156,7 @@ public class SetupActivity extends AppCompatActivity {
 
     private void storeFirestore(@NonNull Task<UploadTask.TaskSnapshot> task,String user_name) {
         Task<Uri> download_uri = task.getResult().getMetadata().getReference().getDownloadUrl();
+
         Map<String, String> userMap=new HashMap<>();
 
         userMap.put("name", user_name);

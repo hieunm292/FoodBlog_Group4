@@ -30,7 +30,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/new_post_toolbar"
-        app:srcCompat="@mipmap/action_add_photo2"
+        app:srcCompat="@mipmap/action_add_photo3"
         tools:ignore="VectorDrawableCompat" />
 
     <EditText
