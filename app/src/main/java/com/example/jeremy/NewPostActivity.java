@@ -94,7 +94,7 @@ public class NewPostActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 String downloadUri=task.getResult().getMetadata().getReference().getDownloadUrl().toString();
                                 Map<String, Object> postmap = new HashMap<>();
-                                postmap.put("image_uri", downloadUri);
+                                postmap.put("image_url", downloadUri);
                                 postmap.put("desc", desc);
                                 postmap.put("user_id", current_user_id);
                                 postmap.put("timestamp", FieldValue.serverTimestamp());

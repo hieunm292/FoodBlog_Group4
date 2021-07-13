@@ -6,10 +6,10 @@
     tools:context=".HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/blog_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Home Screen"
-        android:textColor="#fff"/>
+        android:layout_height="match_parent" />
 
 </FrameLayout>
