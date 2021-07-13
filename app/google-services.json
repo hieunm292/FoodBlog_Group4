@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "286383260531",
+    "project_id": "jeremyblogapp",
+    "storage_bucket": "jeremyblogapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286383260531:android:cde60fa5890c8038d2fb06",
+        "android_client_info": {
+          "package_name": "com.example.jeremy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "286383260531-lhnfu62afnn3v9rn1ob64imp59qiobvr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvydHhlsp37tCe8drOd5eoYYEZrZeDmm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286383260531-lhnfu62afnn3v9rn1ob64imp59qiobvr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
