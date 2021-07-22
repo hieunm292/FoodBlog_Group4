@@ -24,3 +24,5 @@ Android App, developed for learning reasons only.
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/49674828/126627430-d15dbd6f-9232-4254-891b-e7f4632d3b1d.png)
+![image](https://user-images.githubusercontent.com/49674828/126627557-12801334-7690-463d-805b-677731efe5d5.png)
+
